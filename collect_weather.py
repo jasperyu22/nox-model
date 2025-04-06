@@ -117,13 +117,6 @@ weatherdaily['RHAV'] = weatherdaily['RHAV'] / 100
 #fill empty RHAVs with 50% as a deafult
 weatherdaily['RHAV'] = weatherdaily['RHAV'].fillna(0.5)
 
-    
-# weatherdaily.fillna({
-#     'PRCP': 0,
-#     'TAVG': df['TAVG'].mean(), 2 day or 7 day average?
-#     'RHAV': 0.5  # default RH%?
-# }, inplace=True)
-
 #rename columns 
 n_names = {'TAVG': 'avg_temp',
            'AWND':'avg_wind_speed',
