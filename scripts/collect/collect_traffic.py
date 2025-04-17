@@ -12,7 +12,7 @@ import os
 
 #%%
 #Select data from All Directions table (5) from each html file 
-folder = 'traff_monthly_summaries'
+folder = '/Users/jasperyu/Documents/GitHub/nox-model/data/raw/traff_monthly_summaries'
 
 xls_files = glob.glob(os.path.join(folder,'*.xls'))
 
@@ -57,7 +57,7 @@ t_april_dec_24 = tlong.groupby("date", as_index=False)["volume"].sum()
 #Fill values for 2020-2023 where individual daily values are missing
 
 #read in annual summary table from NYCDOT
-yrsummary = pd.read_excel('traff_yearly_summary.xlsx')
+yrsummary = pd.read_excel('/Users/jasperyu/Documents/GitHub/nox-model/data/raw/traff_yearly_summary.xlsx')
 
 #clean yrsummary 
 yrsummary.columns = yrsummary.iloc[0]
@@ -109,7 +109,7 @@ trafficdaily['volume'] = trafficdaily['volume'].replace(0, np.nan)
 trafficdaily['traff_imputed'] = trafficdaily['traff_imputed'] | trafficdaily['volume'].isna().astype(int)
 
 #save to csv
-trafficdaily.to_csv('traffic_daily.csv', index=False)
+trafficdaily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/traffic_daily.csv', index=False)
 
 
 

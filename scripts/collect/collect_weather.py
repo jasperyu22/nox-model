@@ -138,7 +138,7 @@ weatherdaily = weatherdaily.rename(columns= n_names)
 weatherdaily = weatherdaily.sort_values(by='date',ascending=True)
 
 #save to csv
-weatherdaily.to_csv('weather_daily.csv', index=False)
+weatherdaily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/weather_daily.csv', index=False)
 
 
 
