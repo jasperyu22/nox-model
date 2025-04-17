@@ -11,6 +11,7 @@ from datetime import datetime
 from functions import parse_response
 import time 
 
+#%%
 #=====================================================================
 #Identify station of observation 
 #=====================================================================
@@ -45,9 +46,11 @@ sites = sites[['id','name','mindate','maxdate','datacoverage']]
 lgasite = sites[(sites['name'] == "LAGUARDIA AIRPORT, NY US") & 
                 (sites['id'].str.startswith("GHCND"))]['id'].values[0]
 
+#%%
 #=====================================================================
 #Read in daily weather data from Queens County LGA Site
 #=====================================================================
+
 api = 'https://www.ncei.noaa.gov/cdo-web/api/v2/data'
 headers = {'token':token}
 
@@ -62,6 +65,9 @@ welements = ['PRCP', #Precipitation (tenths of mm)
 #years of Interest (2019–2024)
 years = range(2020, 2025)
 weather_data_total = []
+
+session = requests.Session()
+
 
 #API limits requests to 1000, so loop through each year of interest, fetching daily weather data 
 for year in years:
@@ -83,39 +89,43 @@ for year in years:
             'limit': limit,
             'offset': offset
         }
-
-        response = requests.get(api, params=payload, headers=headers)
-        wdata_seg = parse_response(response, label=f"{year} Offset: {offset}",result_key='results')
+        
+        try: 
+            response = session.get(api, params=payload, headers=headers)
+            wdata_seg = parse_response(response, label=f"{year} Offset: {offset}",result_key='results')
+        finally: 
+            response.close()
         
         if wdata_seg is not None and not wdata_seg.empty:
             weather_data_total.append(wdata_seg)
             offset += limit
             
             #add delays between each request to avoid request errors
-            time.sleep(1)
+            time.sleep(3)
         else:
             finished = True
-        
+
+session.close()
+
+#%%
 #=====================================================================
 #Convert values and set up data file
 #=====================================================================
 weather_all = pd.concat(weather_data_total, ignore_index=True)
 weatherdaily = weather_all.pivot(index='date', columns='datatype', values='value').reset_index()
 
-#Convert temperature to proper units, then to fahrenheit
-weatherdaily['TAVG'] = (weatherdaily['TAVG'] / 10) * 9/5 + 32
+#Convert temperature to proper units
+weatherdaily['TAVG'] = (weatherdaily['TAVG'] / 10) 
 
-#Convert precipitation to proper units, then to inches
-weatherdaily['PRCP'] = (weatherdaily['PRCP'] / 10) / 25.4
+#Convert precipitation to proper units
+weatherdaily['PRCP'] = (weatherdaily['PRCP'] / 10) 
 
-#Convert wind speed to proper units, then to miles per hour 
-weatherdaily['AWND'] = (weatherdaily['AWND'] / 10) * 2.23694
+#Convert wind speed to proper units
+weatherdaily['AWND'] = (weatherdaily['AWND'] / 10) 
 
 #Convert Relative Humidity to decimal percentage 
 weatherdaily['RHAV'] = weatherdaily['RHAV'] / 100 
 
-#fill empty RHAVs with 50% as a deafult
-weatherdaily['RHAV'] = weatherdaily['RHAV'].fillna(0.5)
 
 #rename columns 
 n_names = {'TAVG': 'avg_temp',
@@ -127,7 +137,8 @@ n_names = {'TAVG': 'avg_temp',
 weatherdaily = weatherdaily.rename(columns= n_names)
 weatherdaily = weatherdaily.sort_values(by='date',ascending=True)
 
-
+#save to csv
+weatherdaily.to_csv('weather_daily.csv', index=False)
 
 
 

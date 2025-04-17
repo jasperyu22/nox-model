@@ -10,10 +10,9 @@ import numpy as np
 import glob 
 import os 
 
-
 #%%
 #Select data from All Directions table (5) from each html file 
-folder = 'traffic_volume'
+folder = 'traff_monthly_summaries'
 
 xls_files = glob.glob(os.path.join(folder,'*.xls'))
 
@@ -89,19 +88,28 @@ t_2020_2023 = t_2020_2023.drop(columns='year')
 t_april_dec_24['traff_imputed'] = 0 
 t_2020_2023['traff_imputed'] = 1
 
+#Use 2023 as a proxy for missing data from Jan 1, 2024 to April 14, 2024?
+missing_early_2024 = pd.date_range(start='2024-01-01', end='2024-04-14', freq='D')
+aadt_2023 = yrsummary.loc[yrsummary['year'] == 2023, 'AADT'].values[0]
+
+t_2020_2023 = t_2020_2023[~t_2020_2023['date'].between('2024-01-01', '2024-04-14')]
+
+t_early_2024 = pd.DataFrame({
+    'date': missing_early_2024,
+    'volume': aadt_2023,
+    'traff_imputed': 1
+})
+
 #Add missing dates into main trafficdaily 
-trafficdaily = pd.concat([t_april_dec_24,t_2020_2023],ignore_index=True)
+trafficdaily = pd.concat([t_april_dec_24,t_2020_2023,t_early_2024],ignore_index=True)
 trafficdaily = trafficdaily.sort_values(by='date',ascending=True).reset_index(drop=True)
 
 #ensure missing volume values from april24 to dec24 stay NaN for model to split tree accordingly
 trafficdaily['volume'] = trafficdaily['volume'].replace(0, np.nan)
 trafficdaily['traff_imputed'] = trafficdaily['traff_imputed'] | trafficdaily['volume'].isna().astype(int)
 
-#Use 2023 as a proxy for missing data from Jan 1, 2024 to April 14, 2024
-
-
-
-
+#save to csv
+trafficdaily.to_csv('traffic_daily.csv', index=False)
 
 
 
