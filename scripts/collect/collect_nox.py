@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
     noxlvldaily = trim_wide[['0125']].copy()
     noxlvldaily = noxlvldaily.rename(columns={'0125':'site_nox'})
-    noxlvldaily.to_csv('site_nox_daily.csv')
+    noxlvldaily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/site_nox_daily.csv')
     
     
   

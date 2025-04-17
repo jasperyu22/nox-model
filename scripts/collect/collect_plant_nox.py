@@ -154,7 +154,7 @@ merged['plant_nox_weighted']= merged['noxMass'] / merged['distance_km']
 merged_weighted_daily = merged.groupby("date", as_index=False)["plant_nox_weighted"].sum()
 
 #save to csv
-merged_weighted_daily.to_csv('plant_nox_daily.csv', index=False)
+merged_weighted_daily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/plant_nox_daily.csv', index=False)
 
 
 
