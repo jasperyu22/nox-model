@@ -128,7 +128,7 @@ if __name__ == "__main__":
     trim_wide = trim.pivot(index='date_local', columns='site_number', values='arithmetic_mean')
     
 
-    noxlvldaily = trim_wide[['0125']].copy()
+    noxlvldaily = trim_wide[['0125']].copy().reset_index()
     noxlvldaily = noxlvldaily.rename(columns={'0125':'site_nox','date_local':'date'})
     noxlvldaily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/site_nox_daily.csv')
     
