@@ -1,4 +1,4 @@
-date,nox_weighted,avg_wind_speed,precipitation,avg_rel_humid,avg_temp,site_nox,pop_density,traffic_vol,traff_imputed
+date,plant_nox_weighted,avg_wind_speed,precipitation,avg_rel_humid,avg_temp,site_nox,pop_density,traffic_vol,traff_imputed
 2020-01-01,0.6612759838005754,7.1,0.0,0.49,4.3,12.216667,8486.730479006977,153968.0,1
 2020-01-02,0.7729822464094219,3.6,0.0,0.51,4.3,44.765217,8486.730479006977,153968.0,1
 2020-01-03,0.6251289964841534,2.1,3.6,0.79,8.1,47.533333,8486.730479006977,153968.0,1

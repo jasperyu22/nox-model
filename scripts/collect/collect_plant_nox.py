@@ -72,7 +72,7 @@ facilities = facilities[keep_cols].copy()
 facilities = facilities.drop_duplicates(subset='facilityName')
 
 #fetch lat and lon of site 0125 
-from collect_nox import site_0125_coordinates
+from scripts.collect.collect_nox import site_0125_coordinates
 if site_0125_coordinates is None:
     raise ValueError("site_0125_coordinates was not set. Please check collect_nox.py.")
 
