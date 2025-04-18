@@ -46,7 +46,7 @@ tlong = df_multiheader.melt(id_vars="hour",
                                    )
 
 #Clean and sort traffic DF
-tlong["date"] = pd.to_datetime(tlong["date"], errors="coerce")
+tlong['date'] = pd.to_datetime(tlong["date"], errors="coerce")
 tlong['volume'] = pd.to_numeric(tlong['volume'],errors='coerce')
 tlong = tlong.sort_values(["date", "hour"]).reset_index(drop=True)
 
@@ -107,6 +107,9 @@ trafficdaily = trafficdaily.sort_values(by='date',ascending=True).reset_index(dr
 #ensure missing volume values from april24 to dec24 stay NaN for model to split tree accordingly
 trafficdaily['volume'] = trafficdaily['volume'].replace(0, np.nan)
 trafficdaily['traff_imputed'] = trafficdaily['traff_imputed'] | trafficdaily['volume'].isna().astype(int)
+
+#rename column
+trafficdaily = trafficdaily.rename(columns={'volume':'traffic_vol'})
 
 #save to csv
 trafficdaily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/traffic_daily.csv', index=False)

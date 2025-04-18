@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
     noxlvldaily = trim_wide[['0125']].copy().reset_index()
     noxlvldaily = noxlvldaily.rename(columns={'0125':'site_nox','date_local':'date'})
-    noxlvldaily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/site_nox_daily.csv')
+    noxlvldaily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/site_nox_daily.csv',index=False)
     
     
   
