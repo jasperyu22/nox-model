@@ -22,5 +22,11 @@ def add_date_features(df):
     #identify season (1-4)
     df['season'] = df['month'] % 12 // 3 + 1
     
+    #add lagged site_nox levels 
+    df['site_nox_lag1'] = df['site_nox'].shift(1)
+    
+    #add rolling 3 day average site_nox levels excluding current day 
+    df['site_nox_3day_avg'] = df['site_nox'].shift(1).rolling(window=3).mean()
+    
     return df 
     
