@@ -7,8 +7,7 @@ collect_weather.py
 """
 import pandas as pd 
 import requests 
-from datetime import datetime
-from functions import parse_response
+from scripts.utils.functions import parse_response
 import time 
 
 #%%

@@ -8,7 +8,7 @@ collect_powerplant.py
 
 import pandas as pd 
 import requests 
-from functions import parse_response
+from scripts.utils.functions import parse_response
 from haversine import haversine
 import time 
 
