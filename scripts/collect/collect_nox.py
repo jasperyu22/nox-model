@@ -8,9 +8,8 @@ collect_nox.py
 
 import pandas as pd 
 import requests 
-import matplotlib.pyplot as plt
 import time
-from functions import parse_response
+from scripts.utils.functions import parse_response
 
 # Personal API key
 email_value = 'jyu115@syr.edu'
@@ -130,7 +129,7 @@ if __name__ == "__main__":
     
 
     noxlvldaily = trim_wide[['0125']].copy()
-    noxlvldaily = noxlvldaily.rename(columns={'0125':'site_nox'})
+    noxlvldaily = noxlvldaily.rename(columns={'0125':'site_nox','date_local':'date'})
     noxlvldaily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/site_nox_daily.csv')
     
     
