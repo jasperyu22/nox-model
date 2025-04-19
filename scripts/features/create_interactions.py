@@ -24,14 +24,11 @@ def create_interaction_terms(df):
     #capturing seasonality of temperature
     # df['temp_X_season'] = df['avg_temp'] * df['season']
     
-# 
-    
     # df['site7davg_X_humid'] = df['site_nox_7day_avg'] * df['avg_rel_humid']
 
     # df['plantnox_X_day'] = df['plant_nox_weighted'] * df['day_of_week']
     
     # df['plantnox_X_wind_humid'] = df['plant_nox_weighted'] * df['avg_wind_speed'] * df['avg_rel_humid']
-    
     
     #capturing dispersion effect of nox from plant sites 
     # df['plant_nox_X_wind'] = df['plant_nox_weighted'] * df['avg_wind_speed']
@@ -39,7 +36,6 @@ def create_interaction_terms(df):
     #capture humidity effects on traffic volume 
     # df['traff_X_humid'] = df['traffic_vol'] * df['avg_rel_humid']
     
-     
     # #weighs traffic volume data less when imputed 
     # df['traff_vol_X_imput'] = df['traffic_vol'] * df['traff_imputed']
     
