@@ -11,15 +11,20 @@ import requests
 from scripts.utils.functions import parse_response
 from haversine import haversine
 import time 
+import json
 
 #%%
 #=====================================================================
 #collect list of facilities within 50 km radius 
 #=====================================================================
 
-#set parameters
 api = "https://api.epa.gov/easey/facilities-mgmt/facilities/attributes"
-key_value = 'a1HpwUeV6Wpw2B8cTq7GFJBBIYHTufLT9aTF6EJY'
+
+#load API keys from JSON 
+with open('keys.json') as fh:
+    keys = json.load(fh)
+
+key_value = keys['cam_key']
 
 years = "2020|2021|2022|2023|2024"
 
@@ -91,7 +96,7 @@ within_50 = facilities[facilities['distance_km'] <= 50]
 
 api = "https://api.epa.gov/easey/emissions-mgmt/emissions/apportioned/daily/by-facility"
 
-#Convert facility IDs to readable form for request 
+#convert facility IDs to readable form for request 
 facility_ids = within_50['facilityId'].astype(str).tolist()
 facility_ids = "|".join(facility_ids)
 
@@ -119,7 +124,7 @@ for year in range(2020, 2025):
                   'perPage':per_page
                   }
         
-        #Make API request and read segment of data into segment DF 
+        #make API request and read segment of data into segment DF 
         response = session.get(api, headers= headers, params= emissions_params)
         plant_nox_seg = parse_response(response,label=f'Plant Daily NOx ({year},Page {page})')
         response.close()
@@ -154,7 +159,7 @@ merged['plant_nox_weighted']= merged['noxMass'] / merged['distance_km']
 merged_weighted_daily = merged.groupby("date", as_index=False)["plant_nox_weighted"].sum()
 
 #save to csv
-merged_weighted_daily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/plant_nox_daily.csv', index=False)
+merged_weighted_daily.to_csv('data/processed/plant_nox_daily.csv', index=False)
 
 
 

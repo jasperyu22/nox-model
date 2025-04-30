@@ -6,14 +6,20 @@ collect_nox.py
 @author: jasperyu
 """
 
+import json
 import pandas as pd 
 import requests 
 import time
 from scripts.utils.functions import parse_response
 
-# Personal API key
-email_value = 'jyu115@syr.edu'
-key_value = 'tauperam51'
+#load API keys from JSON 
+with open('keys.json') as fh:
+    keys = json.load(fh)
+
+email_value = keys['email']
+key_value = keys['aqs_key']
+
+#set state value to NY
 state = '36'
 
 #%%
@@ -130,7 +136,7 @@ if __name__ == "__main__":
 
     noxlvldaily = trim_wide[['0125']].copy().reset_index()
     noxlvldaily = noxlvldaily.rename(columns={'0125':'site_nox','date_local':'date'})
-    noxlvldaily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/site_nox_daily.csv',index=False)
+    noxlvldaily.to_csv('data/processed/site_nox_daily.csv',index=False)
     
     
   

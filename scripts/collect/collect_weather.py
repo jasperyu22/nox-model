@@ -9,15 +9,19 @@ import pandas as pd
 import requests 
 from scripts.utils.functions import parse_response
 import time 
+import json 
 
 #%%
 #=====================================================================
 #Identify station of observation 
 #=====================================================================
 
-#personal API key
-email_value = 'jyu115@syr.edu'
-token = 'PqJdUtAdmEVXbbPPOEfwpIZKqkXXhqcI'
+#load API keys from JSON 
+with open('keys.json') as fh:
+    keys = json.load(fh)
+
+email_value = keys['email']
+token = keys['noaa_key']
 
 #read in api 
 api = 'https://www.ncei.noaa.gov/cdo-web/api/v2/stations'
@@ -56,7 +60,7 @@ headers = {'token':token}
 #limit to most important weather elements
 welements = ['PRCP', #Precipitation (tenths of mm)
             'TAVG', #Average daily temperature (tenths of degrees C), corresponds to an average of hourly readings
-            'AWDR', #Average daily wind direction (degrees) [NO DATA]
+            'AWDR', #Average daily wind direction (degrees)
             'AWND', #Average daily wind speed (tenths of meters per second)
             'RHAV' #Average relative humidity for the day (percent)
             ]
@@ -66,7 +70,6 @@ years = range(2020, 2025)
 weather_data_total = []
 
 session = requests.Session()
-
 
 #API limits requests to 1000, so loop through each year of interest, fetching daily weather data 
 for year in years:
@@ -137,7 +140,7 @@ weatherdaily = weatherdaily.rename(columns= n_names)
 weatherdaily = weatherdaily.sort_values(by='date',ascending=True)
 
 #save to csv
-weatherdaily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/weather_daily.csv', index=False)
+weatherdaily.to_csv('data/processed/weather_daily.csv', index=False)
 
 
 

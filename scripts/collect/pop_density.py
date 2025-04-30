@@ -8,10 +8,9 @@ pop_density.py
 
 import pandas as pd 
 import zipfile
-import os 
 
 #read in population file, headers start at row 4
-pop = pd.read_excel('/Users/jasperyu/Documents/GitHub/nox-model/data/raw/co-est2024-pop-36.xlsx',header=3)
+pop = pd.read_excel('data/raw/co-est2024-pop-36.xlsx',header=3)
 pop = pop.rename(columns={pop.columns[0]: 'county'})
 pop = pop.drop(pop.columns[1],axis=1)
 
@@ -30,12 +29,10 @@ qpop = pd.melt(qpop,var_name='year',value_name='population')
 #calculate population density 
 
 #read in zipfile
-with zipfile.ZipFile('/Users/jasperyu/Documents/GitHub/nox-model/data/raw/2023_Gaz_counties_national.zip', "r") as zip_ref:
+with zipfile.ZipFile('data/raw/2023_Gaz_counties_national.zip', "r") as zip_ref:
     zip_ref.extractall("county_sizes")
 
 countysize = pd.read_csv('county_sizes/2023_Gaz_counties_national.txt',sep="\t")
-
-#os.remove('2023_Gaz_counties_national.zip')
 
 #extract Queens County land area in sq miles
 qsize = countysize.loc[countysize['GEOID']==36081,'ALAND_SQMI'].item()
@@ -60,7 +57,7 @@ for _, row in qpop.iterrows():
 qpop_daily = pd.DataFrame(daily_rows)
 
 #save to csv
-qpop_daily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/queens_population.csv', index=False)
+qpop_daily.to_csv('data/processed/queens_population.csv', index=False)
 
 
 

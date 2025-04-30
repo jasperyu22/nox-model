@@ -11,8 +11,12 @@ import glob
 import os 
 
 #%%
-#Select data from All Directions table (5) from each html file 
-folder = '/Users/jasperyu/Documents/GitHub/nox-model/data/raw/traff_monthly_summaries'
+#=====================================================================
+#Load traffic monthly summaries and concat
+#=====================================================================
+
+#select data from All Directions table (5) from each html file 
+folder = 'data/raw/traff_monthly_summaries'
 
 xls_files = glob.glob(os.path.join(folder,'*.xls'))
 
@@ -32,32 +36,36 @@ for f in xls_files:
 tdaily = pd.concat(traffic_data_total,ignore_index=True)
 
 #%%
-#clean and aggregate the data 
+#=====================================================================
+#Clean and aggregate the data 
+#=====================================================================
 
-#Rename first column to 'hour' and flatten multi-index col to the dates
+#eename first column to 'hour' and flatten multi-index col to the dates
 df_multiheader = tdaily
 df_multiheader = df_multiheader.rename(columns={df_multiheader.columns[0]: "hour"})
 df_multiheader.columns = ["hour"] + [col[2] for col in df_multiheader.columns[1:]]
 
-#Reshape from wide to long format
+#reshape from wide to long format
 tlong = df_multiheader.melt(id_vars="hour",
                                    var_name="date",
                                    value_name="volume"
                                    )
 
-#Clean and sort traffic DF
+#clean and sort traffic DF
 tlong['date'] = pd.to_datetime(tlong["date"], errors="coerce")
 tlong['volume'] = pd.to_numeric(tlong['volume'],errors='coerce')
 tlong = tlong.sort_values(["date", "hour"]).reset_index(drop=True)
 
-#Calculate daily total count of the hourly volume as total volume for a given day 
+#calculate daily total count of the hourly volume as total volume for a given day 
 t_april_dec_24 = tlong.groupby("date", as_index=False)["volume"].sum()
 
 #%% 
+#=====================================================================
 #Fill values for 2020-2023 where individual daily values are missing
+#=====================================================================
 
 #read in annual summary table from NYCDOT
-yrsummary = pd.read_excel('/Users/jasperyu/Documents/GitHub/nox-model/data/raw/traff_yearly_summary.xlsx')
+yrsummary = pd.read_excel('data/raw/traff_yearly_summary.xlsx')
 
 #clean yrsummary 
 yrsummary.columns = yrsummary.iloc[0]
@@ -100,7 +108,7 @@ t_early_2024 = pd.DataFrame({
     'traff_imputed': 1
 })
 
-#Add missing dates into main trafficdaily 
+#add missing dates into main trafficdaily 
 trafficdaily = pd.concat([t_april_dec_24,t_2020_2023,t_early_2024],ignore_index=True)
 trafficdaily = trafficdaily.sort_values(by='date',ascending=True).reset_index(drop=True)
 
@@ -112,7 +120,7 @@ trafficdaily['traff_imputed'] = trafficdaily['traff_imputed'] | trafficdaily['vo
 trafficdaily = trafficdaily.rename(columns={'volume':'traffic_vol'})
 
 #save to csv
-trafficdaily.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/traffic_daily.csv', index=False)
+trafficdaily.to_csv('data/processed/traffic_daily.csv', index=False)
 
 
 

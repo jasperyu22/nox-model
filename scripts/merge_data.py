@@ -14,7 +14,7 @@ from functools import reduce
 #=====================================================================
 #Merge datasets into one working file 
 #=====================================================================
-proc_data_path = '/Users/jasperyu/Documents/GitHub/nox-model/data/processed'
+proc_data_path = 'data/processed'
 csv_files = glob.glob(os.path.join(proc_data_path,'*.csv'))
 
 dfs = {}
@@ -45,5 +45,5 @@ dfs_list = list(dfs.values())
 merged_df = reduce(lambda left, right: pd.merge(left, right, on='date', how='outer'), dfs_list)
  
 #export to csv 
-merged_df.to_csv('/Users/jasperyu/Documents/GitHub/nox-model/data/processed/merged_data.csv',index=False)
+merged_df.to_csv('data/processed/merged_data.csv',index=False)
 
